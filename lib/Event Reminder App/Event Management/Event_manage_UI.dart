@@ -10,10 +10,12 @@ import 'package:lufickapp/Event%20Reminder%20App/Database/Main_Database_App.dart
 import 'package:lufickapp/Event%20Reminder%20App/Event%20Management/Get%20X%20Storage.dart';
 import 'package:lufickapp/Event%20Reminder%20App/Event%20Management/pinFunctionality.dart';
 import 'package:lufickapp/Event%20Reminder%20App/NotificationCode/UI_Notification/SecondUIofNotifications.dart';
+
 import '../Getx Storage/Them e Change getxController.dart';
 import '../Loginandsignsection/Firebase Functionality/Login and Signin Functionality .dart';
 import '../Loginandsignsection/Login And Sign up.dart';
 import '../Riverpod_Management/Riverpod_add_Management.dart';
+import '../firebaseDatabase.dart';
 import 'Custom Tags Class .dart';
 import 'Event_List_Screen.dart';
 // Main application class
@@ -238,6 +240,7 @@ class EventCreationUIState extends ConsumerState<EventCreationUI> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     // // Watch the state of the radio button provider
@@ -590,6 +593,19 @@ class EventCreationUIState extends ConsumerState<EventCreationUI> {
                         newEvent.eventId.toString());
                     await DatabaseHelper.instance
                         .insertEventFiles(eventId, fileListToInsert);
+                    fireBaseDataBase obj = fireBaseDataBase();
+                    obj.addUsers(
+                      _eventNameController.text.trim(),
+                      _eventLocationController.text.trim(),
+                      parsedDate.toString(),
+                      _eventDescriptionController.text.trim(),
+                      categoriesvalue.toString(),
+                      selectedPriority.toString(),
+                      image?.path ?? "",
+                      file?.path ?? "",
+                      video?.path ?? "",
+                      selectedDate.toString(),
+                    );
                   } catch (e) {
                     // Handle potential errors in file insertion
                     ScaffoldMessenger.of(context).showSnackBar(

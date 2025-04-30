@@ -70,12 +70,11 @@ void main() async {
       themeMode:
           themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      initialRoute:
-      user != null && getPin.length == 2
-          ? '/setpin'
-          : user != null && getPin.length == 2
+      initialRoute: user == null
+          ? '/login'
+          : getPin.length == 2
               ? '/setpin'
-              : '/login',
+              : '/mainpage',
       // 👈 Check if user is logged in
       routes: {
         '/setpin': (context) => SetPin(),
@@ -272,6 +271,5 @@ class LoginPage extends ConsumerWidget {
                   )),
       ),
     );
-
   }
 }

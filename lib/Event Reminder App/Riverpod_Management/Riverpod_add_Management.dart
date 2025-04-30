@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
  // Import your database helper file
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lufickapp/LoginandsignwithNodejs/login.dart';
 import 'package:video_player/video_player.dart';
 
 import '../Database/Main_Database_App.dart';
