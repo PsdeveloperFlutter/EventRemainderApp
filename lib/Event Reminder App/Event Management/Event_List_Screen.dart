@@ -15,6 +15,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../Database/Main_Database_App.dart';
 import '../Riverpod_Management/Riverpod_add_Management.dart';
+import '../firebaseDatabase.dart';
 import 'Event_Management_Update.dart';
 import 'Get X Storage.dart';
 import 'multipleFilesFetch.dart';
@@ -595,6 +596,8 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
               ),
               TextButton(
                 onPressed: () async {
+                  fireBaseDataBase obj=new fireBaseDataBase();
+                  obj.deleteUsers(event['id']);
                   await DatabaseHelper.instance.deleteEvent(event['id']).then(
                         (value) => ref.refresh(eventsProvider),
                       );

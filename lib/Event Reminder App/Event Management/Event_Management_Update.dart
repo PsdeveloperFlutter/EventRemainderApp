@@ -1,6 +1,7 @@
 // Extension to convert string to enum
 import 'dart:async';
 import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -12,6 +13,7 @@ import 'package:timezone/data/latest.dart' as tzData;
 import 'package:timezone/timezone.dart' as tz;
 
 import '../Database/Main_Database_App.dart';
+import '../firebaseDatabase.dart';
 
 PriorityLevel stringToPriorityLevel(String priority) {
   switch (priority.toLowerCase()) {
@@ -574,6 +576,10 @@ class _UpdateEventUIState extends State<UpdateEventUI> {
       'file_path': widget.filepath,
       'video_path': widget.videopath
     };
+    //This is update in firebase
+    fireBaseDataBase obj = new fireBaseDataBase();
+    obj.updateUsers(widget.id, widget.eventName, widget.eventLocation,
+        widget.eventDateTime, widget.eventDescription, widget.eventPriority);
     //This is for the Show Result of Updation of the Data
     database.updateEvent(data, widget.id).then((value) => {
           print("Event updated successfully!"),
