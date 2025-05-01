@@ -578,7 +578,7 @@ class _UpdateEventUIState extends State<UpdateEventUI> {
     };
     //This is update in firebase
     fireBaseDataBase obj = new fireBaseDataBase();
-    obj.updateUsers(widget.id, widget.eventName, widget.eventLocation,
+    obj.updateUsers(widget.id.toString(), widget.eventName, widget.eventLocation,
         widget.eventDateTime, widget.eventDescription, widget.eventPriority);
     //This is for the Show Result of Updation of the Data
     database.updateEvent(data, widget.id).then((value) => {

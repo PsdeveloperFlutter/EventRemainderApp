@@ -283,7 +283,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                                                   onPressed: () async {
                                                     //this is for deletion purpose
                                                     deleteconfirmation(
-                                                        context, event);
+                                                        context, event, index);
                                                   },
                                                   icon: Icon(Icons.delete,
                                                       color:
@@ -313,7 +313,17 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                                                     },
                                                     icon: Icon(Icons.save_alt,
                                                         color: Colors
-                                                            .red.shade500))
+                                                            .red.shade500)),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  FirestoreListScreen()));
+                                                    },
+                                                    icon: Icon(
+                                                        Icons.file_present))
                                               ],
                                             ),
                                           ),
@@ -427,7 +437,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                                               IconButton(
                                                 onPressed: () async {
                                                   await deleteconfirmation(
-                                                      context, event);
+                                                      context, event, index);
                                                 },
                                                 icon: Icon(Icons.delete,
                                                     color: Colors.red.shade700),
@@ -575,9 +585,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
 
   //This is the function for the dialogbox of delete
   Future<void> deleteconfirmation(
-    BuildContext context,
-    Map<String, dynamic> event,
-  ) async {
+      BuildContext context, Map<String, dynamic> event, int index) async {
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -596,8 +604,6 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
               ),
               TextButton(
                 onPressed: () async {
-                  fireBaseDataBase obj=new fireBaseDataBase();
-                  obj.deleteUsers(event['id']);
                   await DatabaseHelper.instance.deleteEvent(event['id']).then(
                         (value) => ref.refresh(eventsProvider),
                       );
