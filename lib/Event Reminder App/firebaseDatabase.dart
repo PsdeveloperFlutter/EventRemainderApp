@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class fireBaseDataBase {
   final Firebase = FirebaseFirestore.instance;
@@ -42,6 +44,7 @@ class fireBaseDataBase {
       'category': category,
     });
   }
+
   void getUsers() {
     Firebase.collection('EventRemainderusers').snapshots().listen((snapshot) {
       for (var doc in snapshot.docs) {
@@ -50,10 +53,12 @@ class fireBaseDataBase {
     });
   }
 }
+
 class FirestoreListScreen extends StatefulWidget {
   @override
   State<FirestoreListScreen> createState() => _FirestoreListScreenState();
 }
+
 class _FirestoreListScreenState extends State<FirestoreListScreen> {
   final CollectionReference users =
       FirebaseFirestore.instance.collection('EventRemainderusers');
@@ -62,7 +67,7 @@ class _FirestoreListScreenState extends State<FirestoreListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Firestore User List')),
+      appBar: AppBar(title: Text('Task List ')),
       body: StreamBuilder<QuerySnapshot>(
         stream: users.snapshots(),
         builder: (context, snapshot) {
@@ -80,20 +85,85 @@ class _FirestoreListScreenState extends State<FirestoreListScreen> {
               final data = doc.data() as Map<String, dynamic>;
               return Card(
                 margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ListTile(
-                  title: Text(data['name'] ?? 'No Name'),
-                  subtitle: Text(data['location']??'No Location')
-                  ,
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          users.doc(doc.id).delete();
-                        },
-                      ),
-                    ],
+                child: Container(
+                  width: 300,
+                  height: 250,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              updateFunction(context, "name", doc.id);
+                            },
+                            child: Text(
+                              "Task Name :- " + data['name'] ?? 'No Name',
+                              style: GoogleFonts.aBeeZee(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )),
+                        InkWell(
+                            onTap: () {
+                              updateFunction(context, "location", doc.id);
+                            },
+                            child: Text(
+                              "Location :- " + data['location'] ??
+                                  'No Location',
+                              style: GoogleFonts.aBeeZee(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )),
+                        InkWell(
+                          onTap: () {
+                            updateFunction(context, "category", doc.id);
+                          },
+                          child: Text(
+                            "Category :- " + data['category'] == null
+                                ? 'No Category'
+                                : data['category'],
+                            style: GoogleFonts.aBeeZee(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            updateFunction(context, "dateandtime", doc.id);
+                          },
+                          child: Text(
+                            "Date and Time :- " +
+                                    DateFormat('dd-MM-yyyy - hh:mm a').format(
+                                        DateTime.parse(data['dateandtime'])) ??
+                                'No Date and Time',
+                            style: GoogleFonts.aBeeZee(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            updateFunction(context, "description", doc.id);
+                          },
+                          child: Text(
+                            "Description :- " + data['description'] ??
+                                'No Description',
+                            style: GoogleFonts.aBeeZee(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            users.doc(doc.id).delete();
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -101,6 +171,81 @@ class _FirestoreListScreenState extends State<FirestoreListScreen> {
           );
         },
       ),
+    );
+  }
+
+  void updateFunction(BuildContext context, String value, String docId) {
+    final TextEditingController _controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Update $value'),
+          content: TextField(
+            controller: _controller,
+            decoration: InputDecoration(
+              labelText: 'Enter new $value',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (value == "name") {
+                  FirebaseFirestore.instance
+                      .collection('EventRemainderusers')
+                      .doc(docId)
+                      .update({
+                    'name': _controller.text.trim(),
+                  });
+                } else if (value == "location") {
+                  FirebaseFirestore.instance
+                      .collection('EventRemainderusers')
+                      .doc(docId)
+                      .update({
+                    'location': _controller.text.trim(),
+                  });
+                } else if (value == "dateandtime") {
+                  FirebaseFirestore.instance
+                      .collection('EventRemainderusers')
+                      .doc(docId)
+                      .update({
+                    'dateandtime': _controller.text.trim(),
+                  });
+                } else if (value == "description") {
+                  FirebaseFirestore.instance
+                      .collection('EventRemainderusers')
+                      .doc(docId)
+                      .update({
+                    'description': _controller.text.trim(),
+                  });
+                } else if (value == "category") {
+                  FirebaseFirestore.instance
+                      .collection('EventRemainderusers')
+                      .doc(docId)
+                      .update({
+                    'category': _controller.text.trim(),
+                  });
+                } else if (value == "priority") {
+                  FirebaseFirestore.instance
+                      .collection('EventRemainderusers')
+                      .doc(docId)
+                      .update({
+                    'priority': _controller.text.trim(),
+                  });
+                }
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
