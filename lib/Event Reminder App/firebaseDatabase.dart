@@ -159,7 +159,21 @@ class _FirestoreListScreenState extends State<FirestoreListScreen> {
                         IconButton(
                           icon: Icon(Icons.delete, color: Colors.red),
                           onPressed: () {
-                            users.doc(doc.id).delete();
+                           showDialog(context: context, builder: (context){
+                             return AlertDialog(
+                               title: Text("Delete"),
+                               content: Text("Are you sure you want to delete this task?"),
+                               actions: [
+                                 TextButton(onPressed: () {
+                                   Navigator.pop(context);
+                                 }, child: Text("Cancel")),
+                                 TextButton(onPressed: () {
+                                   users.doc(doc.id).delete();
+                                   Navigator.pop(context);
+                                 }, child: Text("Delete")),
+                               ],
+                             );
+                           });
                           },
                         ),
                       ],
